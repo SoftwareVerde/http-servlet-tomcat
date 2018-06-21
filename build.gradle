@@ -22,36 +22,29 @@ repositories {
 dependencies {
     compileOnly 'org.apache.tomcat:tomcat-servlet-api:7.0.37'
 
-    compile group: 'com.github.softwareverde', name: 'java-servlet', version: 'v1.+'
+    compile group: 'com.github.softwareverde', name: 'java-servlet', version: 'v1.0.0'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
 tasks.withType(Test) {
     testLogging {
-        // set options for log level LIFECYCLE
-        events "passed", "skipped", "failed", "standardOut"
-        showExceptions true
-        exceptionFormat "full"
-        showCauses true
-        showStackTraces true
-
-        // set options for log level DEBUG and INFO
-        debug {
-            events "started", "passed", "skipped", "failed", "standardOut", "standardError"
-            exceptionFormat "full"
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
+        events = ["passed", "skipped", "failed"]
+        exceptionFormat = "full"
     }
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
