@@ -2,6 +2,7 @@ package com.softwareverde.httpserver.tomcat;
 
 import com.softwareverde.http.cookie.Cookie;
 import com.softwareverde.httpserver.tomcat.request.TomcatRequest;
+import com.softwareverde.logging.Log;
 import com.softwareverde.servlet.Servlet;
 import com.softwareverde.servlet.request.Request;
 import com.softwareverde.servlet.response.Response;
@@ -70,14 +71,18 @@ public class TomcatShim extends HttpServlet {
             request.setGetParameters(Request.parseGetParameters(rawQueryString));
             request.setRawQueryString(rawQueryString);
         }
-        catch (final Exception exception) { exception.printStackTrace(); }
+        catch (final Exception exception) {
+            Log.error("Unable to collect GET parameters.", exception);
+        }
 
         try {
             final String rawPostData = IoUtil.streamToString(httpServletRequest.getInputStream());
             request.setPostParameters(Request.parsePostParameters(rawPostData));
             request.setRawPostData(StringUtil.stringToBytes(rawPostData));
         }
-        catch (final Exception exception) { exception.printStackTrace(); }
+        catch (final Exception exception) {
+            Log.error("Unable to collect POST parameters.", exception);
+        }
 
         return request;
     }
@@ -106,6 +111,7 @@ public class TomcatShim extends HttpServlet {
             responseContent = StringUtil.bytesToString(responseBytes);
         }
         catch (final Exception exception) {
+            Log.error("Unable to handle request", exception);
             httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
