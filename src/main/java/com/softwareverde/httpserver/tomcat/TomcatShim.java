@@ -49,19 +49,22 @@ public class TomcatShim extends HttpServlet {
 
         final List<Cookie> cookies = new ArrayList<Cookie>();
         {
-            for (final javax.servlet.http.Cookie tomcatCookie : httpServletRequest.getCookies()) {
-                final Cookie cookie = new Cookie();
+            final javax.servlet.http.Cookie[] tomcatCookies = httpServletRequest.getCookies();
+            if (tomcatCookies != null) {
+                for (final javax.servlet.http.Cookie tomcatCookie : tomcatCookies) {
+                    final Cookie cookie = new Cookie();
 
-                cookie.setKey(tomcatCookie.getName());
-                cookie.setValue(tomcatCookie.getValue());
-                cookie.setPath(tomcatCookie.getPath());
-                cookie.setDomain(tomcatCookie.getDomain());
-                cookie.setMaxAge(tomcatCookie.getMaxAge(), true);
-                cookie.setIsHttpOnly(tomcatCookie.isHttpOnly());
-                cookie.setIsSecure(tomcatCookie.getSecure());
-                cookie.setIsSameSiteStrict(false);
+                    cookie.setKey(tomcatCookie.getName());
+                    cookie.setValue(tomcatCookie.getValue());
+                    cookie.setPath(tomcatCookie.getPath());
+                    cookie.setDomain(tomcatCookie.getDomain());
+                    cookie.setMaxAge(tomcatCookie.getMaxAge(), true);
+                    cookie.setIsHttpOnly(tomcatCookie.isHttpOnly());
+                    cookie.setIsSecure(tomcatCookie.getSecure());
+                    cookie.setIsSameSiteStrict(false);
 
-                cookies.add(cookie);
+                    cookies.add(cookie);
+                }
             }
         }
         request.setCookies(cookies);
