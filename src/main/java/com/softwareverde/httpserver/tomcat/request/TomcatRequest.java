@@ -3,11 +3,11 @@ package com.softwareverde.httpserver.tomcat.request;
 import com.softwareverde.http.cookie.Cookie;
 import com.softwareverde.servlet.GetParameters;
 import com.softwareverde.servlet.PostParameters;
+import com.softwareverde.servlet.request.Headers;
 import com.softwareverde.servlet.request.Request;
 import com.softwareverde.util.Util;
 
 import java.util.List;
-import java.util.Map;
 
 public class TomcatRequest extends Request {
     public void setHostname(final String hostname) {
@@ -22,11 +22,11 @@ public class TomcatRequest extends Request {
         _method = method;
     }
 
-    public void setHeaders(final Map<String, List<String>> headers) {
-        _headers.clear();
-        for (final String key : headers.keySet()) {
-            final List<String> values = headers.get(key);
-            _headers.put(key, Util.copyList(values));
+    public void setHeaders(final Headers headers) {
+        headers.clear();
+        for (final String key : headers.getHeaderNames()) {
+            final List<String> values = headers.getHeader(key);
+            _headers.setHeader(key, Util.copyList(values));
         }
     }
 

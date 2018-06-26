@@ -4,6 +4,7 @@ import com.softwareverde.http.cookie.Cookie;
 import com.softwareverde.httpserver.tomcat.request.TomcatRequest;
 import com.softwareverde.logging.Log;
 import com.softwareverde.servlet.Servlet;
+import com.softwareverde.servlet.request.Headers;
 import com.softwareverde.servlet.request.Request;
 import com.softwareverde.servlet.response.Response;
 import com.softwareverde.util.IoUtil;
@@ -25,7 +26,7 @@ public class TomcatShim extends HttpServlet {
         request.setFilePath(httpServletRequest.getRequestURL().toString());
         request.setMethod(Request.HttpMethod.fromString(httpServletRequest.getMethod()));
 
-        final Map<String, List<String>> headers = new HashMap<String, List<String>>();
+        final Headers headers = new Headers();
         {
             final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
             if (headerNames != null) {
@@ -41,7 +42,7 @@ public class TomcatShim extends HttpServlet {
                         }
                     }
 
-                    headers.put(headerName, headerNameValues);
+                    headers.setHeader(headerName, headerNameValues);
                 }
             }
         }
