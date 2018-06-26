@@ -5,7 +5,6 @@ import com.softwareverde.servlet.GetParameters;
 import com.softwareverde.servlet.PostParameters;
 import com.softwareverde.servlet.request.Headers;
 import com.softwareverde.servlet.request.Request;
-import com.softwareverde.util.Util;
 
 import java.util.List;
 
@@ -22,11 +21,11 @@ public class TomcatRequest extends Request {
         _method = method;
     }
 
-    public void setHeaders(final Headers headers) {
-        headers.clear();
-        for (final String key : headers.getHeaderNames()) {
-            final List<String> values = headers.getHeader(key);
-            _headers.setHeader(key, Util.copyList(values));
+    public void setHeaders(final Headers requestHeaders) {
+        _headers.clear();
+        for (final String key : requestHeaders.getHeaderNames()) {
+            final List<String> values = requestHeaders.getHeader(key);
+            _headers.setHeader(key, values);
         }
     }
 
